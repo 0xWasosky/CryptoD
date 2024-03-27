@@ -3,19 +3,20 @@ import secrets
 
 
 class CryptoD:
-    @staticmethod
-    def encrypt(string: str):
-        divisor = secrets.token_urlsafe(16 * 7)
+    def __init__(self, lenght: int) -> None:
+        self.random_bytes_lenght = lenght
+
+    def encrypt(self, string: str):
+        divisor = secrets.token_urlsafe(self.random_bytes_lenght)
         data = ""
-        data += divisor[0:75]
+        data += divisor[0:self.random_bytes_lenght // 2]
 
         for index, char in enumerate(string):
             data += chr(ord(char) + index)
-        data += divisor[75:150]
+        data += divisor[self.random_bytes_lenght // 2:self.random_bytes_lenght]
         return data, len(string) * len(data)
     
-    @staticmethod
-    def decyprt(string: str, key: int):
+    def decyprt(self, string: str, key: int):
 
-       data = list(string)[75:int(key / len(string)) + 75]
+       data = list(string)[self.random_bytes_lenght // 2:int(key / len(string)) + self.random_bytes_lenght // 2]
        return "".join(chr(ord(char) - index) for (index, char ) in enumerate(data))
